@@ -14,7 +14,7 @@ const initializeServer = (port) =>
       resolve(server);
     });
 
-    server.on("error", (error: any) => {
+    server.on("error", (error) => {
       debug(chalk.red("Error initializing Server"));
       if (error.code === "EADDRINUSE") {
         debug(chalk.red(`Port ${port} is already in use.`));
@@ -31,4 +31,4 @@ const initializeServer = (port) =>
 app.use(morgan("dev"));
 app.use(express.json());
 
-module.exports = { initializeServer, app };
+export = { initializeServer };
