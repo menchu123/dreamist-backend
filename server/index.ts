@@ -1,6 +1,6 @@
-import express = require("express");
-import cors = require("cors");
-import morgan = require("morgan");
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
 const debug = require("debug")("dreamist:server");
 const chalk = require("chalk");
 
