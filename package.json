@@ -6,17 +6,24 @@
   "scripts": {
     "test": "jest watchAll --collect-coverage",
     "start": "node index",
-    "dev": "nodemon index -q"
+    "dev": "nodemon index -q",
+    "ts-compile": "npx tsc --watch",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^27.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.3.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^16.0.0",
     "eslint-plugin-import": "^2.25.3",
-    "jest": "^27.3.1"
+    "husky": "^7.0.4",
+    "jest": "^27.3.1",
+    "lint-staged": "^12.1.2"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -28,6 +35,11 @@
     "express-validation": "^3.0.8",
     "mongoose": "^6.0.13",
     "morgan": "^1.10.0",
-    "supertest": "^6.1.6"
+    "nodemon": "^2.0.15",
+    "supertest": "^6.1.6",
+    "typescript": "^4.5.2"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   }
 }
