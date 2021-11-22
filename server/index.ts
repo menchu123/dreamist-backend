@@ -30,3 +30,5 @@ const initializeServer = (port) =>
 
 app.use(morgan("dev"));
 app.use(express.json());
+
+module.exports = { initializeServer, app };
