@@ -6,6 +6,10 @@ import { Request, Response } from "express";
 
 import User from "../../database/models/user";
 
+class NewError extends Error {
+  code: number | undefined;
+}
+
 const debug = Debug("dreamist:user:controller");
 
 export const userLogin = async (req: Request, res: Response, next) => {
@@ -13,14 +17,14 @@ export const userLogin = async (req: Request, res: Response, next) => {
   const user = await User.findOne({ username });
   if (!user) {
     debug(chalk.redBright("Wrong credentials"));
-    const error: any = new Error("Wrong credentials");
+    const error = new NewError("Wrong credentials");
     error.code = 401;
     next(error);
   } else {
     const rightPassword = await bcrypt.compare(password, user.password);
     if (!rightPassword) {
       debug(chalk.redBright("Wrong credentialss"));
-      const error: any = new Error("Wrong credentialss");
+      const error = new NewError("Wrong credentialss");
       error.code = 401;
       next(error);
     } else {
@@ -44,7 +48,7 @@ export const userSignUp = async (req: Request, res: Response, next) => {
   const user = await User.findOne({ username: newUser.username });
   if (user) {
     debug(chalk.redBright("Username already taken"));
-    const error: any = new Error("Username already taken");
+    const error = new NewError("Username already taken");
     error.code = 400;
     next(error);
   } else {
