@@ -37,4 +37,20 @@ export const userLogin = async (req, res, next) => {
   }
 };
 
-export default { userLogin };
+export const userSignUp = async (req, res, next) => {
+  const newUser = req.body;
+  const user = await User.findOne({ username: newUser.username });
+  if (user) {
+    debug(chalk.redBright("Username already taken"));
+    const error: any = new Error("Username already taken");
+    error.code = 400;
+    next(error);
+  } else {
+    newUser.dreams = [];
+    newUser.password = await bcrypt.hash(newUser.password, 10);
+    User.create(newUser);
+    res.json().status(200);
+  }
+};
+
+// export default { userLogin, userSignUp };
