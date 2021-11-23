@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const jwt = require("jsonwebtoken");
 const User = require("../../database/models/user");
 
-const userLogin = async (req, res, next) => {
+export const userLogin = async (req, res, next) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) {
@@ -36,4 +36,4 @@ const userLogin = async (req, res, next) => {
   }
 };
 
-export = { userLogin };
+export const a = 1;
