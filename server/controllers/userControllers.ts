@@ -52,5 +52,3 @@ export const userSignUp = async (req, res, next) => {
     res.json().status(200);
   }
 };
-
-// export default { userLogin, userSignUp };

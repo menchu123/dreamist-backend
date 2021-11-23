@@ -8,11 +8,20 @@ export const notFoundErrorHandler = (req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const errorHandler = (error, req, res, next) => {
+export const errorHandler = (
+  error: {
+    message: string;
+    code: number;
+    statusCode?: number;
+  },
+  req,
+  res,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  next
+) => {
   debug(chalk.red("An error has occurred: ", error.message));
   if (error instanceof ValidationError) {
-    // error.code = 400;
+    error.code = 400;
     error.message = "Bad romance";
   }
   const message = error.code ? error.message : "Idk what to tell you man";
