@@ -20,5 +20,5 @@ module.exports = {
     "consistent-return": "off",
     "no-console": "off",
   },
-  ignorePatterns: [".eslintrc.js", "./dist"],
+  ignorePatterns: [".eslintrc.js", "./dist", "/*.config.js"],
 };
