@@ -6,7 +6,7 @@ module.exports = {
     jest: true,
   },
   extends: ["airbnb-base", "airbnb-typescript/base", "prettier"],
-  parser: ["@typescript-eslint/parser", "@babel/eslint-parser"],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
     sourceType: "module",
@@ -20,5 +20,5 @@ module.exports = {
     "consistent-return": "off",
     "no-console": "off",
   },
-  ignorePatterns: [".eslintrc.js", "./dist"],
+  ignorePatterns: [".eslintrc.js", "./dist", "/*.config.js"],
 };
