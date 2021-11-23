@@ -19,7 +19,6 @@ module.exports = {
     "no-restricted-syntax": "off",
     "consistent-return": "off",
     "no-console": "off",
-    "import/first": "off",
   },
   ignorePatterns: [".eslintrc.js", "./dist", "/*.config.js", "/*.config.cjs"],
 };
