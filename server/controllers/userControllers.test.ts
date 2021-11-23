@@ -1,8 +1,10 @@
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../../database/models/user");
-const { userLogin } = require("./userControllers");
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import User from "../../database/models/user";
+import { userLogin } from "./userControllers";
+
+dotenv.config();
 
 jest.mock("../../database/models/user");
 jest.mock("bcrypt");
@@ -74,6 +76,8 @@ describe("Given an userLogin function", () => {
         json: jest.fn(),
       };
 
+      const next = jest.fn();
+
       User.findOne = jest.fn().mockResolvedValue({
         username: "Luis",
         password: "Marta",
@@ -87,7 +91,7 @@ describe("Given an userLogin function", () => {
         token: expectedtoken,
       };
 
-      await userLogin(req, res);
+      await userLogin(req, res, next);
 
       expect(res.json).toHaveBeenCalledWith(expectedResponse);
     });

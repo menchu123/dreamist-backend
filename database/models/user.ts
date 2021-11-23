@@ -1,13 +1,6 @@
-const { Schema, model, Types } = require("mongoose");
+import { Schema, model, Types } from "mongoose";
 
-interface UserInterface {
-  name: string;
-  user: string;
-  password: string;
-  dreams: string[];
-}
-
-const userSchema: UserInterface = new Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -27,5 +20,6 @@ const userSchema: UserInterface = new Schema({
   },
 });
 
-// eslint-disable-next-line import/prefer-default-export
-export const User = model("User", userSchema, "Users");
+const User = model("User", userSchema, "Users");
+
+export default User;

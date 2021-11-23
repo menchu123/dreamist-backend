@@ -1,6 +1,8 @@
-const debug = require("debug")("dreamist:database");
-const chalk = require("chalk");
-const mongoose = require("mongoose");
+import Debug from "debug";
+import chalk from "chalk";
+import mongoose from "mongoose";
+
+const debug = Debug("dreamist:database");
 
 const initializeDB = (connectionString) =>
   new Promise<void>((resolve, reject) => {
@@ -29,4 +31,4 @@ const initializeDB = (connectionString) =>
     });
   });
 
-export = { initializeDB };
+export default initializeDB;
