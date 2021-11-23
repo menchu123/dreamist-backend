@@ -6,7 +6,8 @@
     "lib": ["ES2015", "DOM"],
     "outDir": "./dist",
     "noEmitOnError": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["./**/*.ts", ".eslintrc.js"],
   "exclude": ["./dist", "node_modules"]
