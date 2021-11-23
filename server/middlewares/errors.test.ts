@@ -1,12 +1,17 @@
 import { ValidationError } from "express-validation";
+import { Request, Response } from "express";
 import { notFoundErrorHandler, errorHandler } from "./errors";
 
 const mockResponse = () => {
-  const res = {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn().mockReturnThis(),
-  };
+  const res = {} as Response;
+  res.json = jest.fn().mockReturnValue(res);
+  res.status = jest.fn().mockReturnValue(res);
   return res;
+};
+
+const mockRequest = () => {
+  const req = {} as Request;
+  return req;
 };
 
 describe("Given an notFoundErrorHandler middleware,", () => {
@@ -14,7 +19,7 @@ describe("Given an notFoundErrorHandler middleware,", () => {
     test("Then it should send a response with a 'Endpoint not found' error and a status code of 404", () => {
       const res = mockResponse();
       const expectedError = { error: "Endpoint not found" };
-      const req = {};
+      const req = mockRequest();
 
       notFoundErrorHandler(req, res);
 
@@ -29,7 +34,7 @@ describe("Given an errorHandler middleware,", () => {
     test("Then it should send a response with a 'Idk what to tell you man' error and a status code of 500", () => {
       const res = mockResponse();
       const error = { message: "Idk what to tell you man", code: null };
-      const req = {};
+      const req = mockRequest();
       const next = () => {};
 
       errorHandler(error, req, res, next);
@@ -42,7 +47,7 @@ describe("Given an errorHandler middleware,", () => {
     test("Then it should send a response with the error's message and a status code of 401", () => {
       const res = mockResponse();
       const error = { message: "Who are you", code: 401 };
-      const req = {};
+      const req = mockRequest();
       const next = () => {};
 
       errorHandler(error, req, res, next);
