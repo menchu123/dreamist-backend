@@ -1,10 +1,11 @@
 import Debug from "debug";
 import chalk from "chalk";
 import { ValidationError } from "express-validation";
+import { Request, Response } from "express";
 
 const debug = Debug("dreamist:errors");
 
-export const notFoundErrorHandler = (req, res) => {
+export const notFoundErrorHandler = (req: Request, res: Response) => {
   res.status(404).json({ error: "Endpoint not found" });
 };
 
@@ -14,8 +15,8 @@ export const errorHandler = (
     code: number;
     statusCode?: number;
   },
-  req,
-  res,
+  req: Request,
+  res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next
 ) => {

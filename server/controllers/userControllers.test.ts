@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Request, Response } from "express";
 import User from "../../database/models/user";
 import { userLogin, userSignUp } from "./userControllers";
 
@@ -14,17 +15,16 @@ class ErrorCode extends Error {
   code: number | undefined;
 }
 
-interface IResponseTest {
-  status: () => void;
-  json: () => void;
-}
-
 const mockResponse = () => {
-  const res: IResponseTest = {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn().mockReturnThis(),
-  };
+  const res = {} as Response;
+  res.json = jest.fn().mockReturnValue(res);
+  res.status = jest.fn().mockReturnValue(res);
   return res;
+};
+
+const mockRequest = () => {
+  const req = {} as Request;
+  return req;
 };
 
 describe("Given an userLogin function", () => {
@@ -32,13 +32,12 @@ describe("Given an userLogin function", () => {
     test("Then it should invoke the next function with an error", async () => {
       const usernameTest = "Pablo";
 
-      const req = {
-        body: {
-          username: usernameTest,
-        },
+      const req = mockRequest();
+      req.body = {
+        username: usernameTest,
       };
 
-      const res = {};
+      const res = mockResponse();
 
       User.findOne = jest.fn().mockResolvedValue(false);
       const error: any = new Error("Wrong credentials");
@@ -55,13 +54,14 @@ describe("Given an userLogin function", () => {
 
   describe("When it receives a request with an correct username and an incorrect password", () => {
     test("Then it should invoke the next function with an error", async () => {
-      const req = {
-        body: {
-          username: "Luis",
-          password: "Wrong password",
-        },
+      const req = mockRequest();
+      req.body = {
+        username: "Luis",
+        password: "Wrong password",
       };
-      const res = {};
+
+      const res = mockResponse();
+
       const next = jest.fn();
 
       User.findOne = jest.fn().mockResolvedValue({
@@ -83,15 +83,13 @@ describe("Given an userLogin function", () => {
 
   describe("When it receives a request with an correct username and password", () => {
     test("Then it should invoke res.json with an object with a token", async () => {
-      const req = {
-        body: {
-          username: "Luis",
-          password: "Marta",
-        },
+      const req = mockRequest();
+      req.body = {
+        username: "Luis",
+        password: "Marta",
       };
-      const res = {
-        json: jest.fn(),
-      };
+
+      const res = mockResponse();
 
       const next = jest.fn();
 
@@ -120,13 +118,12 @@ describe("Given an userSignUp function", () => {
     test("Then it should invoke the next function with an error", async () => {
       const usernameTest = "Pablo";
 
-      const req = {
-        body: {
-          username: usernameTest,
-        },
+      const req = mockRequest();
+      req.body = {
+        username: usernameTest,
       };
 
-      const res = {};
+      const res = mockResponse();
 
       User.findOne = jest.fn().mockResolvedValue(true);
       const error = new ErrorCode("Username already taken");
@@ -149,9 +146,8 @@ describe("Given an userSignUp function", () => {
         password: "MartaTeQuiero",
       };
 
-      const req = {
-        body: userTest,
-      };
+      const req = mockRequest();
+      req.body = userTest;
 
       const res = mockResponse();
 

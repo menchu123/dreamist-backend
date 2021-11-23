@@ -2,11 +2,13 @@ import Debug from "debug";
 import bcrypt from "bcrypt";
 import chalk from "chalk";
 import jwt from "jsonwebtoken";
+import { Request, Response } from "express";
+
 import User from "../../database/models/user";
 
 const debug = Debug("dreamist:user:controller");
 
-export const userLogin = async (req, res, next) => {
+export const userLogin = async (req: Request, res: Response, next) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) {
@@ -37,7 +39,7 @@ export const userLogin = async (req, res, next) => {
   }
 };
 
-export const userSignUp = async (req, res, next) => {
+export const userSignUp = async (req: Request, res: Response, next) => {
   const newUser = req.body;
   const user = await User.findOne({ username: newUser.username });
   if (user) {
