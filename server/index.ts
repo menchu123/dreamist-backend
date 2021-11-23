@@ -3,6 +3,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const debug = require("debug")("dreamist:server");
 const chalk = require("chalk");
+const userRoutes = require("./routes/userRoutes");
+const { notFoundErrorHandler, errorHandler } = require("./middlewares/errors");
 
 const app = express();
 app.use(cors());
@@ -30,5 +32,9 @@ const initializeServer = (port) =>
 
 app.use(morgan("dev"));
 app.use(express.json());
+
+app.use("/users", userRoutes);
+app.use(notFoundErrorHandler);
+app.use(errorHandler);
 
 export = { initializeServer };
