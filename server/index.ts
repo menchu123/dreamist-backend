@@ -1,11 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const debug = require("debug")("dreamist:server");
-const chalk = require("chalk");
-const userRoutes = require("./routes/userRoutes");
-const { notFoundErrorHandler, errorHandler } = require("./middlewares/errors");
+import express from "express";
 
+import cors from "cors";
+import morgan from "morgan";
+import Debug from "debug";
+import chalk from "chalk";
+
+import userRoutes from "./routes/userRoutes";
+import { notFoundErrorHandler, errorHandler } from "./middlewares/errors";
+
+const debug = Debug("dreamist:server");
 const app = express();
 app.use(cors());
 
@@ -16,7 +19,7 @@ const initializeServer = (port) =>
       resolve(server);
     });
 
-    server.on("error", (error) => {
+    server.on("error", (error: any) => {
       debug(chalk.red("Error initializing Server"));
       if (error.code === "EADDRINUSE") {
         debug(chalk.red(`Port ${port} is already in use.`));
@@ -37,4 +40,4 @@ app.use("/users", userRoutes);
 app.use(notFoundErrorHandler);
 app.use(errorHandler);
 
-export = { initializeServer };
+export default initializeServer;

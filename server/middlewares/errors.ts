@@ -1,6 +1,8 @@
-const debug = require("debug")("dreamist:errors");
-const chalk = require("chalk");
-const { ValidationError } = require("express-validation");
+import Debug from "debug";
+import chalk from "chalk";
+import { ValidationError } from "express-validation";
+
+const debug = Debug("dreamist:errors");
 
 export const notFoundErrorHandler = (req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
@@ -10,7 +12,7 @@ export const notFoundErrorHandler = (req, res) => {
 export const errorHandler = (error, req, res, next) => {
   debug(chalk.red("An error has occurred: ", error.message));
   if (error instanceof ValidationError) {
-    error.code = 400;
+    // error.code = 400;
     error.message = "Bad romance";
   }
   const message = error.code ? error.message : "Idk what to tell you man";

@@ -1,6 +1,8 @@
-require("dotenv").config();
-const { initializeServer } = require("./server/index");
-const { initializeDB } = require("./database");
+import dotenv from "dotenv";
+
+dotenv.config();
+import initializeServer from "./server/index";
+import initializeDB from "./database";
 
 const port = process.env.PORT ?? process.env.SERVER_PORT ?? 5050;
 
