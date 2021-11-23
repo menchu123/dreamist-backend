@@ -12,7 +12,8 @@
   },
   "jest": {
     "testPathIgnorePatterns": [
-      "dist"
+      "dist",
+      "/node_modules"
     ]
   },
   "keywords": [],
@@ -37,6 +38,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.16.0",
     "@types/node": "^16.11.9",
+    "bcrypt": "^5.0.1",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "debug": "^4.3.2",
@@ -44,6 +46,7 @@
     "eslint-config-prettier": "^8.3.0",
     "express": "^4.17.1",
     "express-validation": "^3.0.8",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
