@@ -27,6 +27,5 @@ const userSchema: UserInterface = new Schema({
   },
 });
 
-const User = model("User", userSchema, "Users");
-
-export = { User };
+// eslint-disable-next-line import/prefer-default-export
+export const User = model("User", userSchema, "Users");

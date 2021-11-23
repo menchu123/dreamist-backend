@@ -16,4 +16,3 @@ export const errorHandler = (error, req, res, next) => {
   const message = error.code ? error.message : "Idk what to tell you man";
   res.status(error.code || 500).json({ error: message });
 };
-// export = { notFoundErrorHandler, errorHandler };
