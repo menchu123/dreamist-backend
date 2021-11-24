@@ -140,7 +140,7 @@ describe("Given a getUserDreamById function", () => {
   });
 
   describe("When it receives an id through the req.params and the call to the User.findById function resolves in null", () => {
-    test("Then it should invoke the next with a 'Could not get dreams' error", async () => {
+    test("Then it should invoke next with a 'Could not get dreams' error", async () => {
       const req = {
         params: {
           idDream: 1,
@@ -191,6 +191,35 @@ describe("Given a createDream function", () => {
       await createDream(req, res, next);
 
       expect(res.json).toHaveBeenCalledWith(newDream);
+    });
+  });
+
+  describe("When it receives a dream through the req.body but Dream.create fails", () => {
+    test("Then it should invoke next with a 'Post failed' error", async () => {
+      const req = {
+        body: {
+          title: "ay ay ay la que se pudo liar",
+          description: "mira es que ni te lo imaginas",
+          mood: 1,
+        },
+        userId: 1,
+      };
+
+      const next = jest.fn();
+
+      Dream.create = jest.fn().mockResolvedValue(null);
+
+      User.findOneAndUpdate = jest.fn().mockResolvedValue({});
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      const expectedError = new Error("Post failed");
+
+      await createDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
