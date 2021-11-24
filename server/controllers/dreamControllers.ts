@@ -17,3 +17,18 @@ export const getUserDreams = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserDreamById = async (req, res, next) => {
+  const { idDream } = req.params;
+  try {
+    const userDreams = await User.findById(req.userId).populate("dreams");
+    const searchedDream = userDreams.dreams.filter(
+      (dream) => dream.id === idDream
+    );
+    res.json(searchedDream[0]);
+  } catch (error) {
+    error.code = 400;
+    error.message = "Could not get dreams";
+    next(error);
+  }
+};
