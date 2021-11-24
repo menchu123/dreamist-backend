@@ -5,6 +5,8 @@ import Debug from "debug";
 import chalk from "chalk";
 
 import userRoutes from "./routes/userRoutes";
+import dreamRoutes from "./routes/dreamRoutes";
+
 import { notFoundErrorHandler, errorHandler } from "./middlewares/errors";
 
 const debug = Debug("dreamist:server");
@@ -36,6 +38,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/users", userRoutes);
+app.use("/dreams", dreamRoutes);
 app.use(notFoundErrorHandler);
 app.use(errorHandler);
 
