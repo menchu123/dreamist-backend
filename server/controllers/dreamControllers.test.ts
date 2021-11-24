@@ -1,6 +1,13 @@
-import { getDreams, getUserDreams, getUserDreamById } from "./dreamControllers";
+import {
+  getDreams,
+  getUserDreams,
+  getUserDreamById,
+  createDream,
+} from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
+
+jest.setTimeout(20000);
 
 describe("Given a getDreams function", () => {
   describe("When it is called with a res and a req", () => {
@@ -153,6 +160,37 @@ describe("Given a getUserDreamById function", () => {
       await getUserDreamById(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a createDream function", () => {
+  describe("When it receives a dream through the req.body", () => {
+    test("Then it should invoke the method json of res with the new dream", async () => {
+      const req = {
+        body: {
+          title: "ay ay ay la que se pudo liar",
+          description: "mira es que ni te lo imaginas",
+          mood: 1,
+        },
+        userId: 1,
+      };
+
+      const newDream = req.body;
+
+      const next = jest.fn();
+
+      Dream.create = jest.fn().mockResolvedValue(newDream);
+
+      User.findOneAndUpdate = jest.fn().mockResolvedValue({});
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      await createDream(req, res, next);
+
+      expect(res.json).toHaveBeenCalledWith(newDream);
     });
   });
 });
