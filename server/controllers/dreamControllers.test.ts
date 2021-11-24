@@ -1,4 +1,4 @@
-import { getDreams, getUserDreams } from "./dreamControllers";
+import { getDreams, getUserDreams, getUserDreamById } from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
 
@@ -84,6 +84,73 @@ describe("Given a getUserDreams function", () => {
       const expectedError = new Error("Could not get dreams");
 
       await getUserDreams(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a getUserDreamById function", () => {
+  describe("When it receives an id through the req.params", () => {
+    test("Then it should invoke the method json with the corresponding dream and call the User.findById function", async () => {
+      const req = {
+        params: {
+          idDream: 1,
+        },
+        userId: 1,
+      };
+
+      const next = jest.fn();
+
+      const userDreams = {
+        id: 1,
+        name: "Elso",
+        dreams: [
+          {
+            id: 1,
+            title: "Cosis",
+          },
+          {
+            id: 2,
+            title: "wow",
+          },
+        ],
+      };
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ populate: jest.fn().mockResolvedValue(userDreams) });
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      await getUserDreamById(req, res, next);
+
+      expect(User.findById).toHaveBeenCalledWith(req.userId);
+      expect(res.json).toHaveBeenCalledWith(userDreams.dreams[0]);
+    });
+  });
+
+  describe("When it receives an id through the req.params and the call to the User.findById function resolves in null", () => {
+    test("Then it should invoke the next with a 'Could not get dreams' error", async () => {
+      const req = {
+        params: {
+          idDream: 1,
+        },
+      };
+
+      const next = jest.fn();
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ populate: jest.fn().mockResolvedValue(null) });
+
+      const res = {};
+
+      const expectedError = new Error("Could not get dreams");
+
+      await getUserDreamById(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
