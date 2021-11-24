@@ -23,6 +23,7 @@ export const errorHandler = (
   debug(chalk.red("An error has occurred: ", error.message));
   if (error instanceof ValidationError) {
     error.code = 400;
+    error.statusCode = 400;
     error.message = "Bad romance";
   }
   const message = error.code ? error.message : "Idk what to tell you man";
