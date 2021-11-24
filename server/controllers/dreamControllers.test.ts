@@ -1,6 +1,13 @@
-import { getDreams, getUserDreams, getUserDreamById } from "./dreamControllers";
+import {
+  getDreams,
+  getUserDreams,
+  getUserDreamById,
+  createDream,
+} from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
+
+jest.setTimeout(20000);
 
 describe("Given a getDreams function", () => {
   describe("When it is called with a res and a req", () => {
@@ -133,7 +140,7 @@ describe("Given a getUserDreamById function", () => {
   });
 
   describe("When it receives an id through the req.params and the call to the User.findById function resolves in null", () => {
-    test("Then it should invoke the next with a 'Could not get dreams' error", async () => {
+    test("Then it should invoke next with a 'Could not get dreams' error", async () => {
       const req = {
         params: {
           idDream: 1,
@@ -151,6 +158,66 @@ describe("Given a getUserDreamById function", () => {
       const expectedError = new Error("Could not get dreams");
 
       await getUserDreamById(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a createDream function", () => {
+  describe("When it receives a dream through the req.body", () => {
+    test("Then it should invoke the method json of res with the new dream", async () => {
+      const req = {
+        body: {
+          title: "ay ay ay la que se pudo liar",
+          description: "mira es que ni te lo imaginas",
+          mood: 1,
+        },
+        userId: 1,
+      };
+
+      const newDream = req.body;
+
+      const next = jest.fn();
+
+      Dream.create = jest.fn().mockResolvedValue(newDream);
+
+      User.findOneAndUpdate = jest.fn().mockResolvedValue({});
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      await createDream(req, res, next);
+
+      expect(res.json).toHaveBeenCalledWith(newDream);
+    });
+  });
+
+  describe("When it receives a dream through the req.body but Dream.create fails", () => {
+    test("Then it should invoke next with a 'Post failed' error", async () => {
+      const req = {
+        body: {
+          title: "ay ay ay la que se pudo liar",
+          description: "mira es que ni te lo imaginas",
+          mood: 1,
+        },
+        userId: 1,
+      };
+
+      const next = jest.fn();
+
+      Dream.create = jest.fn().mockResolvedValue(null);
+
+      User.findOneAndUpdate = jest.fn().mockResolvedValue({});
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      const expectedError = new Error("Post failed");
+
+      await createDream(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });

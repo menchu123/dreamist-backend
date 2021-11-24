@@ -32,3 +32,18 @@ export const getUserDreamById = async (req, res, next) => {
     next(error);
   }
 };
+
+export const createDream = async (req, res, next) => {
+  try {
+    const newDream = await Dream.create(req.body);
+    await User.findOneAndUpdate(
+      { _id: req.userId },
+      { $push: { dreams: newDream.id } }
+    );
+    res.json(newDream);
+  } catch (error) {
+    error.message = "Post failed";
+    error.code = 400;
+    next(error);
+  }
+};
