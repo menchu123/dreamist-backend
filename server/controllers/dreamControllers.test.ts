@@ -66,4 +66,26 @@ describe("Given a getUserDreams function", () => {
       expect(res.json).toHaveBeenCalledWith(userDreams.dreams);
     });
   });
+
+  describe("When it receives an object req without a userId", () => {
+    test("Then it should invoke the next with a 'Could not get dreams' error", async () => {
+      const req = {};
+
+      const next = jest.fn();
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ populate: jest.fn().mockResolvedValue(null) });
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      const expectedError = new Error("Could not get dreams");
+
+      await getUserDreams(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });
