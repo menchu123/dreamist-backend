@@ -34,6 +34,6 @@ const dreamSchema = new Schema({
   },
 });
 
-const Dream = model("Dream", dreamSchema, "Dreams");
+const Dream = model("Dream", dreamSchema);
 
 export default Dream;
