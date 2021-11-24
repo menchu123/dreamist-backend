@@ -131,4 +131,28 @@ describe("Given a getUserDreamById function", () => {
       expect(res.json).toHaveBeenCalledWith(userDreams.dreams[0]);
     });
   });
+
+  describe("When it receives an id through the req.params and the call to the User.findById function resolves in null", () => {
+    test("Then it should invoke the next with a 'Could not get dreams' error", async () => {
+      const req = {
+        params: {
+          idDream: 1,
+        },
+      };
+
+      const next = jest.fn();
+
+      User.findById = jest
+        .fn()
+        .mockReturnValue({ populate: jest.fn().mockResolvedValue(null) });
+
+      const res = {};
+
+      const expectedError = new Error("Could not get dreams");
+
+      await getUserDreamById(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });
