@@ -1,9 +1,8 @@
+import { Response, NextFunction } from "express";
 import User from "../../database/models/user";
 import Dream from "../../database/models/dream";
-
-class NewError extends Error {
-  code: number | undefined;
-}
+import NewError from "../../utils/NewError";
+import RequestPlus from "../../utils/RequestPlus";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getDreams = async (req, res, next) => {
@@ -11,7 +10,11 @@ export const getDreams = async (req, res, next) => {
   res.json();
 };
 
-export const getUserDreams = async (req, res, next) => {
+export const getUserDreams = async (
+  req: RequestPlus,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userDreams = await User.findById(req.userId).populate("dreams");
     res.json(userDreams.dreams);
@@ -22,7 +25,11 @@ export const getUserDreams = async (req, res, next) => {
   }
 };
 
-export const getUserDreamById = async (req, res, next) => {
+export const getUserDreamById = async (
+  req: RequestPlus,
+  res: Response,
+  next: NextFunction
+) => {
   const { idDream } = req.params;
   try {
     const userDreams = await User.findById(req.userId).populate("dreams");
@@ -37,7 +44,11 @@ export const getUserDreamById = async (req, res, next) => {
   }
 };
 
-export const createDream = async (req, res, next) => {
+export const createDream = async (
+  req: RequestPlus,
+  res: Response,
+  next: NextFunction
+) => {
   const { file } = req;
   const dreamContent = req.body;
   if (file) {
@@ -57,7 +68,11 @@ export const createDream = async (req, res, next) => {
   }
 };
 
-export const deleteDream = async (req, res, next) => {
+export const deleteDream = async (
+  req: RequestPlus,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { idDream } = req.params;
     const deletedDream = await Dream.findByIdAndDelete(idDream);
@@ -79,7 +94,11 @@ export const deleteDream = async (req, res, next) => {
   }
 };
 
-export const updateDream = async (req, res, next) => {
+export const updateDream = async (
+  req: RequestPlus,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { idDream } = req.params;
     const { file } = req;

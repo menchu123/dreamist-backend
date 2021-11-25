@@ -1,26 +1,20 @@
 import jwt from "jsonwebtoken";
 import auth from "./auth";
-
-class NewError extends Error {
-  code: number | undefined;
-}
+import NewError from "../../utils/NewError";
+import mockRequestPlus from "../../mocks/mockRequestPlus";
 
 jest.mock("jsonwebtoken");
 
 describe("Given an auth middleware", () => {
   describe("When it gets a request with an incorrect Authorization header", () => {
     test("Then it should send an error with a message 'Not authorized sorry' and status 401", () => {
-      const req = {
-        header: jest.fn(),
-      };
-
-      const res = {};
+      const req = mockRequestPlus(null, null);
 
       const next = jest.fn();
 
       const expectedError = new NewError("Not authorized sorry");
 
-      auth(req, res, next);
+      auth(req, null, next);
       expect(next).toBeCalledWith(expectedError);
     });
   });
@@ -28,54 +22,41 @@ describe("Given an auth middleware", () => {
     test("Then it should send an error with a message 'Token is missing' and status 401", () => {
       const authHeader = "nunu";
 
-      const req = {
-        header: jest.fn().mockReturnValue(authHeader),
-      };
+      const req = mockRequestPlus(null, authHeader);
 
-      const res = {};
       const next = jest.fn();
       const expectedError = new NewError("Token is missing...");
 
-      auth(req, res, next);
+      auth(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
   describe("When it gets a request with a Authorization header and it validates", () => {
-    test("Then it should add userId and userName to req and call next", async () => {
-      const req = {
-        json: jest.fn(),
-        header: jest.fn().mockReturnValue("Bearer token"),
-      };
+    test("Then it should add userId and userName to req and call next", () => {
+      const req = mockRequestPlus({ userName: "hola" }, "Bearer token");
 
       const next = jest.fn();
 
-      const res = {};
-
       jwt.verify = jest.fn().mockReturnValue("algo");
-      await auth(req, res, next);
+      auth(req, null, next);
 
       expect(req).toHaveProperty("userId");
-      expect(req).toHaveProperty("userName");
+      expect(req.body).toHaveProperty("userName");
       expect(next).toHaveBeenCalled();
     });
   });
 
   describe("When it gets a request with a Authorization header but with an incorrect token", () => {
-    test("Then it should send an error with a message 'Token no valid' and status 401", async () => {
-      const req = {
-        json: jest.fn(),
-        header: jest.fn().mockReturnValue("Bearer token"),
-      };
+    test("Then it should send an error with a message 'Token no valid' and status 401", () => {
+      const req = mockRequestPlus(null, "Bearer token");
 
       const next = jest.fn();
       const errorSent = new NewError("Token not valid");
       errorSent.code = 401;
 
-      const res = {};
-
       jwt.verify = jest.fn().mockReturnValue(null);
-      await auth(req, res, next);
+      auth(req, null, next);
 
       expect(next).toHaveBeenCalledWith(errorSent);
     });
