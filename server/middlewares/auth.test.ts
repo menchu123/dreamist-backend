@@ -33,13 +33,13 @@ describe("Given an auth middleware", () => {
     });
   });
   describe("When it gets a request with a Authorization header and it validates", () => {
-    test("Then it should add userId and userName to req and call next", async () => {
-      const req = mockRequestPlus({ userName: "hola" }, null);
+    test("Then it should add userId and userName to req and call next", () => {
+      const req = mockRequestPlus({ userName: "hola" }, "Bearer token");
 
       const next = jest.fn();
 
       jwt.verify = jest.fn().mockReturnValue("algo");
-      await auth(req, null, next);
+      auth(req, null, next);
 
       expect(req).toHaveProperty("userId");
       expect(req.body).toHaveProperty("userName");
@@ -48,7 +48,7 @@ describe("Given an auth middleware", () => {
   });
 
   describe("When it gets a request with a Authorization header but with an incorrect token", () => {
-    test("Then it should send an error with a message 'Token no valid' and status 401", async () => {
+    test("Then it should send an error with a message 'Token no valid' and status 401", () => {
       const req = mockRequestPlus(null, "Bearer token");
 
       const next = jest.fn();
@@ -56,7 +56,7 @@ describe("Given an auth middleware", () => {
       errorSent.code = 401;
 
       jwt.verify = jest.fn().mockReturnValue(null);
-      await auth(req, null, next);
+      auth(req, null, next);
 
       expect(next).toHaveBeenCalledWith(errorSent);
     });

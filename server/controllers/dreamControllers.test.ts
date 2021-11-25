@@ -8,6 +8,8 @@ import {
 } from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
+import mockResponse from "../../mocks/mockResponse";
+import mockRequestPlus from "../../mocks/mockRequestPlus";
 
 jest.setTimeout(20000);
 
@@ -40,9 +42,7 @@ describe("Given a getDreams function", () => {
 describe("Given a getUserDreams function", () => {
   describe("When it receives an object req with a userId", () => {
     test("Then it should invoke the method json and call the User.findById function", async () => {
-      const req = {
-        userId: 1,
-      };
+      const req = mockRequestPlus();
 
       const next = jest.fn();
 
@@ -65,9 +65,7 @@ describe("Given a getUserDreams function", () => {
         .fn()
         .mockReturnValue({ populate: jest.fn().mockResolvedValue(userDreams) });
 
-      const res = {
-        json: jest.fn(),
-      };
+      const res = mockResponse();
 
       await getUserDreams(req, res, next);
 
@@ -78,7 +76,7 @@ describe("Given a getUserDreams function", () => {
 
   describe("When it receives an object req without a userId", () => {
     test("Then it should invoke the next with a 'Could not get dreams' error", async () => {
-      const req = {};
+      const req = mockRequestPlus();
 
       const next = jest.fn();
 
@@ -86,9 +84,7 @@ describe("Given a getUserDreams function", () => {
         .fn()
         .mockReturnValue({ populate: jest.fn().mockResolvedValue(null) });
 
-      const res = {
-        json: jest.fn(),
-      };
+      const res = mockResponse();
 
       const expectedError = new Error("Could not get dreams");
 
@@ -102,12 +98,7 @@ describe("Given a getUserDreams function", () => {
 describe("Given a getUserDreamById function", () => {
   describe("When it receives an id through the req.params", () => {
     test("Then it should invoke the method json with the corresponding dream and call the User.findById function", async () => {
-      const req = {
-        params: {
-          idDream: 1,
-        },
-        userId: 1,
-      };
+      const req = mockRequestPlus(null, null, { idDream: 1 });
 
       const next = jest.fn();
 
@@ -130,9 +121,7 @@ describe("Given a getUserDreamById function", () => {
         .fn()
         .mockReturnValue({ populate: jest.fn().mockResolvedValue(userDreams) });
 
-      const res = {
-        json: jest.fn(),
-      };
+      const res = mockResponse();
 
       await getUserDreamById(req, res, next);
 
@@ -143,11 +132,7 @@ describe("Given a getUserDreamById function", () => {
 
   describe("When it receives an id through the req.params and the call to the User.findById function resolves in null", () => {
     test("Then it should invoke next with a 'Could not get dreams' error", async () => {
-      const req = {
-        params: {
-          idDream: 1,
-        },
-      };
+      const req = mockRequestPlus(null, null, { idDream: 1 });
 
       const next = jest.fn();
 
@@ -155,7 +140,7 @@ describe("Given a getUserDreamById function", () => {
         .fn()
         .mockReturnValue({ populate: jest.fn().mockResolvedValue(null) });
 
-      const res = {};
+      const res = mockResponse();
 
       const expectedError = new Error("Could not get dreams");
 
@@ -169,7 +154,7 @@ describe("Given a getUserDreamById function", () => {
 describe("Given a createDream function", () => {
   describe("When it receives a dream through the req.body", () => {
     test("Then it should invoke the method json of res with the new dream", async () => {
-      const req = {
+      const req: any = {
         body: {
           title: "ay ay ay la que se pudo liar",
           description: "mira es que ni te lo imaginas",
@@ -189,9 +174,7 @@ describe("Given a createDream function", () => {
 
       User.findOneAndUpdate = jest.fn().mockResolvedValue({});
 
-      const res = {
-        json: jest.fn(),
-      };
+      const res = mockResponse();
 
       await createDream(req, res, next);
 
@@ -201,7 +184,7 @@ describe("Given a createDream function", () => {
 
   describe("When it receives a dream through the req.body but Dream.create fails", () => {
     test("Then it should invoke next with a 'Post failed' error", async () => {
-      const req = {
+      const req: any = {
         body: {
           title: "ay ay ay la que se pudo liar",
           description: "mira es que ni te lo imaginas",
@@ -219,9 +202,7 @@ describe("Given a createDream function", () => {
 
       User.findOneAndUpdate = jest.fn().mockResolvedValue({});
 
-      const res = {
-        json: jest.fn(),
-      };
+      const res = mockResponse();
 
       const expectedError = new Error("Post failed");
 
@@ -238,10 +219,9 @@ describe("Given a deleteDream function", () => {
       const deletedDream = {
         id: 1,
       };
-      const req = { params: { idDream: deletedDream.id } };
-      const res = {
-        json: jest.fn(),
-      };
+
+      const req = mockRequestPlus(null, null, { idDream: deletedDream.id });
+      const res = mockResponse();
 
       const next = jest.fn();
       Dream.findByIdAndDelete = jest.fn().mockResolvedValue(deletedDream);
@@ -256,10 +236,8 @@ describe("Given a deleteDream function", () => {
       const deletedDream = {
         id: 1,
       };
-      const req = { params: { idDream: deletedDream.id } };
-      const res = {
-        json: jest.fn(),
-      };
+      const req = mockRequestPlus(null, null, { idDream: deletedDream.id });
+      const res = mockResponse();
       const expectedError = new Error("Dream not found :(");
       const next = jest.fn();
       Dream.findByIdAndDelete = jest.fn().mockResolvedValue(null);
@@ -271,8 +249,8 @@ describe("Given a deleteDream function", () => {
   });
   describe("When it doesn't receive a dream id through the req.params", () => {
     test("Then it should invoke next with a 'Couldn't delete dream :('", async () => {
-      const req = {};
-      const res = {};
+      const req = mockRequestPlus(null, null, null);
+      const res = mockResponse();
       const expectedError = new Error("Couldn't delete dream :(");
       const next = jest.fn();
       Dream.findByIdAndDelete = jest.fn().mockRejectedValue(null);
@@ -290,13 +268,13 @@ describe("Given an updateDream function", () => {
       const updatedDream = {
         id: 1,
       };
-      const req = {
+      const req: any = {
         params: { idDream: updatedDream.id },
         file: {
           fileURL: "cosas.jpg",
         },
       };
-      const res = {};
+      const res = mockResponse();
 
       const next = jest.fn();
       const expectedError = new Error("Couldn't update dream :(");
@@ -309,8 +287,8 @@ describe("Given an updateDream function", () => {
   });
   describe("When it receives a non existent dream id through the req.params", () => {
     test("Then it should invoke next with a 'Dream not found :(", async () => {
-      const req = { params: { idDream: 4 } };
-      const res = {};
+      const req = mockRequestPlus(null, null, { idDream: 4 });
+      const res = mockResponse();
 
       const next = jest.fn();
       const expectedError = new Error("Dream not found :(");
@@ -327,8 +305,8 @@ describe("Given an updateDream function", () => {
       const updatedDream = {
         id: 1,
       };
-      const req = { params: { idDream: updatedDream.id } };
-      const res = { json: jest.fn() };
+      const req = mockRequestPlus(null, null, { idDream: updatedDream.id });
+      const res = mockResponse();
 
       const next = jest.fn();
       Dream.findById = jest.fn().mockResolvedValue(updatedDream);

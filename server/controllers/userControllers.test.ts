@@ -4,16 +4,13 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import User from "../../database/models/user";
 import { userLogin, userSignUp } from "./userControllers";
+import NewError from "../../utils/NewError";
 
 dotenv.config();
 
 jest.mock("../../database/models/user");
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
-
-class ErrorCode extends Error {
-  code: number | undefined;
-}
 
 const mockResponse = () => {
   const res = {} as Response;
@@ -40,7 +37,7 @@ describe("Given an userLogin function", () => {
       const res = mockResponse();
 
       User.findOne = jest.fn().mockResolvedValue(false);
-      const error: any = new Error("Wrong credentials");
+      const error = new NewError("Wrong credentials");
       error.code = 401;
       const next = jest.fn();
 
@@ -71,7 +68,7 @@ describe("Given an userLogin function", () => {
 
       bcrypt.compare = jest.fn().mockResolvedValue(false);
 
-      const error = new ErrorCode("Wrong credentialss");
+      const error = new NewError("Wrong credentialss");
       error.code = 401;
 
       await userLogin(req, res, next);
@@ -126,7 +123,7 @@ describe("Given an userSignUp function", () => {
       const res = mockResponse();
 
       User.findOne = jest.fn().mockResolvedValue(true);
-      const error = new ErrorCode("Username already taken");
+      const error = new NewError("Username already taken");
       error.code = 400;
       const next = jest.fn();
 
