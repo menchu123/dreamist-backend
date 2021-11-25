@@ -5,10 +5,7 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 
 import User from "../../database/models/user";
-
-class NewError extends Error {
-  code: number | undefined;
-}
+import NewError from "../../utils/NewError";
 
 const debug = Debug("dreamist:user:controller");
 

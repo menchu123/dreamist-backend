@@ -1,9 +1,6 @@
 import jwt from "jsonwebtoken";
 import auth from "./auth";
-
-class NewError extends Error {
-  code: number | undefined;
-}
+import NewError from "../../utils/NewError";
 
 jest.mock("jsonwebtoken");
 

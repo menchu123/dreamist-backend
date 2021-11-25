@@ -1,9 +1,6 @@
 import User from "../../database/models/user";
 import Dream from "../../database/models/dream";
-
-class NewError extends Error {
-  code: number | undefined;
-}
+import NewError from "../../utils/NewError";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getDreams = async (req, res, next) => {

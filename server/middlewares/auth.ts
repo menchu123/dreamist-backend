@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
-
-class NewError extends Error {
-  code: number | undefined;
-}
+import NewError from "../../utils/NewError";
 
 const auth = (req, res, next) => {
   const authHeader = req.header("Authorization");
