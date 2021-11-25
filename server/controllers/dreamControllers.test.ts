@@ -307,4 +307,18 @@ describe("Given an updateDream function", () => {
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
+  describe("When it receives a non existent dream id through the req.params", () => {
+    test("Then it should invoke next with a 'Dream not found :(", async () => {
+      const req = { params: { idDream: 4 } };
+      const res = {};
+
+      const next = jest.fn();
+      const expectedError = new Error("Dream not found :(");
+      Dream.findById = jest.fn().mockResolvedValue(null);
+
+      await updateDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });
