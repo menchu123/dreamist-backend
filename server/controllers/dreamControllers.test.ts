@@ -3,6 +3,7 @@ import {
   getUserDreams,
   getUserDreamById,
   createDream,
+  deleteDream,
 } from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
@@ -226,6 +227,27 @@ describe("Given a createDream function", () => {
       await createDream(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a deleteDream function", () => {
+  describe("When it receives a dream id through the req.params", () => {
+    test("Then it should invoke the method json of res with the board deleted", async () => {
+      const deletedDream = {
+        id: 1,
+      };
+      const req = { params: { idDream: deletedDream.id } };
+      const res = {
+        json: jest.fn(),
+      };
+
+      const next = jest.fn();
+      Dream.findByIdAndDelete = jest.fn().mockResolvedValue(deletedDream);
+
+      await deleteDream(req, res, next);
+
+      expect(res.json).toHaveBeenCalled();
     });
   });
 });
