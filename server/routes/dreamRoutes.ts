@@ -23,7 +23,6 @@ const upload = multer({
       );
 
       const newFilename = `${oldFilenameWithoutExtension}-${Date.now()}-${oldFilenameExtension}`;
-      console.log(newFilename);
       callback(null, newFilename);
     },
   }),
