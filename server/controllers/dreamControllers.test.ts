@@ -233,7 +233,7 @@ describe("Given a createDream function", () => {
 
 describe("Given a deleteDream function", () => {
   describe("When it receives a dream id through the req.params", () => {
-    test("Then it should invoke the method json of res with the board deleted", async () => {
+    test("Then it should invoke the method json of res with the dream deleted", async () => {
       const deletedDream = {
         id: 1,
       };
@@ -248,6 +248,24 @@ describe("Given a deleteDream function", () => {
       await deleteDream(req, res, next);
 
       expect(res.json).toHaveBeenCalled();
+    });
+  });
+  describe("When it receives a non existent dream id through the req.params", () => {
+    test("Then it should invoke next with a 'Dream not found :('", async () => {
+      const deletedDream = {
+        id: 1,
+      };
+      const req = { params: { idDream: deletedDream.id } };
+      const res = {
+        json: jest.fn(),
+      };
+      const expectedError = new Error("Dream not found :(");
+      const next = jest.fn();
+      Dream.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+
+      await deleteDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
