@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
+import { NextFunction, Response } from "express";
+import RequestPlus from "../../utils/RequestPlus";
 import NewError from "../../utils/NewError";
 
-const auth = (req, res, next) => {
+const auth = (req: RequestPlus, res: Response, next: NextFunction) => {
   const authHeader = req.header("Authorization");
   if (!authHeader) {
     const error = new NewError("Not authorized sorry");
