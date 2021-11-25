@@ -321,4 +321,22 @@ describe("Given an updateDream function", () => {
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
+
+  describe("When it receives a dream id through the req.params", () => {
+    test("Then it should invoke res json with the updated dream", async () => {
+      const updatedDream = {
+        id: 1,
+      };
+      const req = { params: { idDream: updatedDream.id } };
+      const res = { json: jest.fn() };
+
+      const next = jest.fn();
+      Dream.findById = jest.fn().mockResolvedValue(updatedDream);
+      Dream.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedDream);
+
+      await updateDream(req, res, next);
+
+      expect(res.json).toHaveBeenCalledWith(updatedDream);
+    });
+  });
 });
