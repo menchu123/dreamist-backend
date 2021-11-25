@@ -1,17 +1,6 @@
-import { Request, Response } from "express";
 import { notFoundErrorHandler, errorHandler } from "./errors";
-
-const mockResponse = () => {
-  const res = {} as Response;
-  res.json = jest.fn().mockReturnValue(res);
-  res.status = jest.fn().mockReturnValue(res);
-  return res;
-};
-
-const mockRequest = () => {
-  const req = {} as Request;
-  return req;
-};
+import mockResponse from "../../mocks/mockResponse";
+import mockRequest from "../../mocks/mockRequest";
 
 describe("Given an notFoundErrorHandler middleware,", () => {
   describe("When it gets a request", () => {
