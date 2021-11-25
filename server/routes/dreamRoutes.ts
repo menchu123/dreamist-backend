@@ -3,6 +3,7 @@ import {
   getUserDreams,
   getUserDreamById,
   createDream,
+  deleteDream,
 } from "../controllers/dreamControllers";
 import auth from "../middlewares/auth";
 import firebase from "../middlewares/firebase";
@@ -19,5 +20,6 @@ router.post(
   firebase,
   createDream
 );
+router.delete("/user-dreams/delete/:idDream", auth, deleteDream);
 
 export default router;

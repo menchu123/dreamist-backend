@@ -3,6 +3,7 @@ import {
   getUserDreams,
   getUserDreamById,
   createDream,
+  deleteDream,
 } from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
@@ -224,6 +225,58 @@ describe("Given a createDream function", () => {
       const expectedError = new Error("Post failed");
 
       await createDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a deleteDream function", () => {
+  describe("When it receives a dream id through the req.params", () => {
+    test("Then it should invoke the method json of res with the dream deleted", async () => {
+      const deletedDream = {
+        id: 1,
+      };
+      const req = { params: { idDream: deletedDream.id } };
+      const res = {
+        json: jest.fn(),
+      };
+
+      const next = jest.fn();
+      Dream.findByIdAndDelete = jest.fn().mockResolvedValue(deletedDream);
+
+      await deleteDream(req, res, next);
+
+      expect(res.json).toHaveBeenCalled();
+    });
+  });
+  describe("When it receives a non existent dream id through the req.params", () => {
+    test("Then it should invoke next with a 'Dream not found :('", async () => {
+      const deletedDream = {
+        id: 1,
+      };
+      const req = { params: { idDream: deletedDream.id } };
+      const res = {
+        json: jest.fn(),
+      };
+      const expectedError = new Error("Dream not found :(");
+      const next = jest.fn();
+      Dream.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+
+      await deleteDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+  describe("When it doesn't receive a dream id through the req.params", () => {
+    test("Then it should invoke next with a 'Couldn't delete dream :('", async () => {
+      const req = {};
+      const res = {};
+      const expectedError = new Error("Couldn't delete dream :(");
+      const next = jest.fn();
+      Dream.findByIdAndDelete = jest.fn().mockRejectedValue(null);
+
+      await deleteDream(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
     });
