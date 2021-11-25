@@ -40,7 +40,9 @@ export const getUserDreamById = async (req, res, next) => {
 export const createDream = async (req, res, next) => {
   const { file } = req;
   const dreamContent = req.body;
-  dreamContent.image = file.fileURL;
+  if (file) {
+    dreamContent.image = file.fileURL;
+  }
   try {
     const newDream = await Dream.create(dreamContent);
     await User.findOneAndUpdate(
