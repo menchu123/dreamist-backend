@@ -78,3 +78,29 @@ export const deleteDream = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateDream = async (req, res, next) => {
+  try {
+    const { idDream } = req.params;
+    const { file } = req;
+    if (file) {
+      req.body.image = file.fileURL;
+    }
+    const dream = await Dream.findById(idDream);
+
+    if (!dream) {
+      const error = new NewError("Dream not found :(");
+      error.code = 404;
+      next(error);
+    } else {
+      const updatedDream = await Dream.findByIdAndUpdate(idDream, req.body, {
+        new: true,
+      });
+      res.json(updatedDream);
+    }
+  } catch {
+    const error = new NewError("Couldn't update dream :(");
+    error.code = 400;
+    next(error);
+  }
+};
