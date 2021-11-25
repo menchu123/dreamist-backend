@@ -4,6 +4,7 @@ import {
   getUserDreamById,
   createDream,
   deleteDream,
+  updateDream,
 } from "./dreamControllers";
 import Dream from "../../database/models/dream";
 import User from "../../database/models/user";
@@ -247,7 +248,7 @@ describe("Given a deleteDream function", () => {
 
       await deleteDream(req, res, next);
 
-      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(deletedDream);
     });
   });
   describe("When it receives a non existent dream id through the req.params", () => {
@@ -279,6 +280,63 @@ describe("Given a deleteDream function", () => {
       await deleteDream(req, res, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given an updateDream function", () => {
+  describe("When it receives a  dream id through the req.params but the update fails", () => {
+    test("Then it should invoke next with a 'Couldn't update dream :(", async () => {
+      const updatedDream = {
+        id: 1,
+      };
+      const req = {
+        params: { idDream: updatedDream.id },
+        file: {
+          fileURL: "cosas.jpg",
+        },
+      };
+      const res = {};
+
+      const next = jest.fn();
+      const expectedError = new Error("Couldn't update dream :(");
+      Dream.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+
+      await updateDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+  describe("When it receives a non existent dream id through the req.params", () => {
+    test("Then it should invoke next with a 'Dream not found :(", async () => {
+      const req = { params: { idDream: 4 } };
+      const res = {};
+
+      const next = jest.fn();
+      const expectedError = new Error("Dream not found :(");
+      Dream.findById = jest.fn().mockResolvedValue(null);
+
+      await updateDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it receives a dream id through the req.params", () => {
+    test("Then it should invoke res json with the updated dream", async () => {
+      const updatedDream = {
+        id: 1,
+      };
+      const req = { params: { idDream: updatedDream.id } };
+      const res = { json: jest.fn() };
+
+      const next = jest.fn();
+      Dream.findById = jest.fn().mockResolvedValue(updatedDream);
+      Dream.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedDream);
+
+      await updateDream(req, res, next);
+
+      expect(res.json).toHaveBeenCalledWith(updatedDream);
     });
   });
 });
