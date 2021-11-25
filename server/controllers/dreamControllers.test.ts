@@ -174,6 +174,9 @@ describe("Given a createDream function", () => {
           mood: 1,
         },
         userId: 1,
+        file: {
+          fileURL: "cosas.jpg",
+        },
       };
 
       const newDream = req.body;
@@ -203,6 +206,9 @@ describe("Given a createDream function", () => {
           mood: 1,
         },
         userId: 1,
+        file: {
+          fileURL: "cosas.jpg",
+        },
       };
 
       const next = jest.fn();
