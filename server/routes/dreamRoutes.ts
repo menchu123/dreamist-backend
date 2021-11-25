@@ -10,7 +10,7 @@ import {
 import auth from "../middlewares/auth";
 import firebase from "../middlewares/firebase";
 import upload from "../middlewares/upload";
-import createSchema from "../schemas/dreamSchemas";
+import { createSchema, editSchema } from "../schemas/dreamSchemas";
 
 const router = express.Router();
 
@@ -30,6 +30,7 @@ router.put(
   auth,
   upload.single("image"),
   firebase,
+  validate(editSchema),
   updateDream
 );
 
