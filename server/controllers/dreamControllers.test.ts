@@ -268,4 +268,17 @@ describe("Given a deleteDream function", () => {
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
+  describe("When it doesn't receive a dream id through the req.params", () => {
+    test("Then it should invoke next with a 'Couldn't delete dream :('", async () => {
+      const req = {};
+      const res = {};
+      const expectedError = new Error("Couldn't delete dream :(");
+      const next = jest.fn();
+      Dream.findByIdAndDelete = jest.fn().mockRejectedValue(null);
+
+      await deleteDream(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });

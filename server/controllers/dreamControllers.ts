@@ -56,8 +56,8 @@ export const createDream = async (req, res, next) => {
 };
 
 export const deleteDream = async (req, res, next) => {
-  const { idDream } = req.params;
   try {
+    const { idDream } = req.params;
     const deletedDream = await Dream.findByIdAndDelete(idDream);
     if (!deletedDream) {
       const error = new NewError("Dream not found :(");
