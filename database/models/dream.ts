@@ -17,8 +17,8 @@ const dreamSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  tags: {
-    type: [String],
+  type: {
+    type: String,
     default: "normal",
   },
   mood: {

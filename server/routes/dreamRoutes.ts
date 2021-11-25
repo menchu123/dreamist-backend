@@ -1,4 +1,5 @@
 import express from "express";
+import { validate } from "express-validation";
 import {
   getUserDreams,
   getUserDreamById,
@@ -9,6 +10,7 @@ import {
 import auth from "../middlewares/auth";
 import firebase from "../middlewares/firebase";
 import upload from "../middlewares/upload";
+import createSchema from "../schemas/dreamSchemas";
 
 const router = express.Router();
 
@@ -19,6 +21,7 @@ router.post(
   auth,
   upload.single("image"),
   firebase,
+  validate(createSchema),
   createDream
 );
 router.delete("/user-dreams/delete/:idDream", auth, deleteDream);
