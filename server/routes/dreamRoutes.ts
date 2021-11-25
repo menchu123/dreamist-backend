@@ -4,6 +4,7 @@ import {
   getUserDreamById,
   createDream,
   deleteDream,
+  updateDream,
 } from "../controllers/dreamControllers";
 import auth from "../middlewares/auth";
 import firebase from "../middlewares/firebase";
@@ -21,5 +22,12 @@ router.post(
   createDream
 );
 router.delete("/user-dreams/delete/:idDream", auth, deleteDream);
+router.put(
+  "/user-dreams/edit/:idDream",
+  auth,
+  upload.single("image"),
+  firebase,
+  updateDream
+);
 
 export default router;
