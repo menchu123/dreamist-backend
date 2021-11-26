@@ -29,34 +29,6 @@ beforeAll(async () => {
   token = loginResponse.body.token;
 });
 
-beforeEach(async () => {
-  await Dream.deleteMany();
-  await Dream.create([
-    {
-      type: "normal",
-      title: "pesadilla infernal",
-      description: "backend en typescript",
-      mood: 5,
-      image: "aaa",
-      drawing: "aaa",
-      date: "2021-11-24T10:51:37.828Z",
-      id: "619e19396746b082b9421972",
-      __v: 0,
-    },
-    {
-      type: "normal",
-      title: "Sueño ilustrado",
-      description: "AAAAAAAAAAAAAHHHHHHHH",
-      mood: 1,
-      image:
-        "https://storage.googleapis.com/dreamist-be502.appspot.com/iconPiolinGrosero-1637830191241-.png",
-      date: "2021-11-25T08:49:51.787Z",
-      id: "619f4e2fc3abc5b958dc2fc1",
-      __v: 0,
-    },
-  ]);
-});
-
 afterAll(async () => {
   await mongoose.connection.on("close", () => {
     debug(chalk.red("Connexion to database ended"));
@@ -66,6 +38,7 @@ afterAll(async () => {
     debug(chalk.red("Connexion to server ended"));
   });
   await server.close();
+  Dream.deleteMany();
 });
 
 describe("Given a /user-dreams endpoint", () => {
@@ -77,6 +50,29 @@ describe("Given a /user-dreams endpoint", () => {
         .expect(200);
 
       expect(body).toEqual([]);
+    });
+  });
+  describe("When a GET request arrives without a token", () => {
+    test("Then it should send a response with a 401 error", async () => {
+      await request.get("/dreams/user-dreams").expect(401);
+    });
+  });
+});
+
+describe("Given a /user-dreams/new endpoint", () => {
+  describe("When a POST request arrives with a correct token", () => {
+    test("Then it should send a response with the new dream and a status code of 200", async () => {
+      const { body } = await request
+        .post("/dreams/user-dreams/new")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Sueño ilustrado",
+          description: "AAAAAAAAAAAAAHHHHHHHH",
+          mood: 1,
+        })
+        .expect(200);
+
+      expect(body).toHaveProperty("title", "Sueño ilustrado");
     });
   });
 });
