@@ -1,7 +1,7 @@
 import Debug from "debug";
 import chalk from "chalk";
-import { ValidationError } from "express-validation";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import IError from "../../interfaces/error";
 
 const debug = Debug("dreamist:errors");
 
@@ -10,20 +10,15 @@ export const notFoundErrorHandler = (req: Request, res: Response) => {
 };
 
 export const errorHandler = (
-  error: {
-    message: string;
-    code: number;
-    statusCode?: number;
-  },
+  error: IError,
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next
+  next: NextFunction
 ) => {
   debug(chalk.red("An error has occurred: ", error.message));
-  if (error instanceof ValidationError) {
+  if (error.statusCode === 400) {
     error.code = 400;
-    error.statusCode = 400;
     error.message = "Bad romance";
   }
   const message = error.code ? error.message : "Idk what to tell you man";
