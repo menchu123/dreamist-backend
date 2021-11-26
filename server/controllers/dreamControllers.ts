@@ -33,10 +33,16 @@ export const getUserDreamById = async (
   const { idDream } = req.params;
   try {
     const userDreams = await User.findById(req.userId).populate("dreams");
-    const searchedDream = userDreams.dreams.filter(
+    const searchedDream = await userDreams.dreams.filter(
       (dream) => dream.id === idDream
     );
-    res.json(searchedDream[0]);
+    if (searchedDream.length < 1) {
+      const error = new NewError("Dream not found :(");
+      error.code = 404;
+      next(error);
+    } else {
+      res.json(searchedDream[0]);
+    }
   } catch (error) {
     error.code = 400;
     error.message = "Could not get dreams";
