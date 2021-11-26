@@ -136,7 +136,7 @@ describe("Given an userSignUp function", () => {
   });
 
   describe("When it receives a request with a new username", () => {
-    test("Then it should respond with a 200 status", async () => {
+    test("Then it should respond with a 201 status", async () => {
       const userTest = {
         name: "Luis",
         username: "luis",
@@ -153,7 +153,7 @@ describe("Given an userSignUp function", () => {
       await userSignUp(req, res, null);
 
       expect(res.json).toHaveBeenCalled();
-      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.status).toHaveBeenCalledWith(201);
     });
   });
 });

@@ -93,7 +93,7 @@ describe("Given a /register endpoint", () => {
     });
   });
   describe("When a POST request arrives with a non existent username, a name and a password", () => {
-    test("Then it should respond with a 200", async () => {
+    test("Then it should respond with a 201", async () => {
       await request
         .post("/users/register")
         .send({
@@ -101,7 +101,7 @@ describe("Given a /register endpoint", () => {
           password: "sueñis",
           name: "Soñador",
         })
-        .expect(200);
+        .expect(201);
     });
   });
 });

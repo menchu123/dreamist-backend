@@ -60,6 +60,7 @@ export const userSignUp = async (
     newUser.dreams = [];
     newUser.password = await bcrypt.hash(newUser.password, 10);
     User.create(newUser);
-    res.json().status(200);
+    res.status(201);
+    res.json();
   }
 };
