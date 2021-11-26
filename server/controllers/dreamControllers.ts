@@ -66,6 +66,7 @@ export const createDream = async (
       { _id: req.userId },
       { $push: { dreams: newDream.id } }
     );
+    res.status(201);
     res.json(newDream);
   } catch (error) {
     error.message = "Post failed";

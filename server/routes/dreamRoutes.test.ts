@@ -112,7 +112,7 @@ describe("Given a /user-dreams/new endpoint", () => {
           description: "AAAAAAAAAAAAAHHHHHHHH",
           mood: 1,
         })
-        .expect(200);
+        .expect(201);
 
       expect(body).toHaveProperty("title", "Sueño ilustrado");
     });
