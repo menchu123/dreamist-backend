@@ -42,4 +42,4 @@ app.use("/dreams", dreamRoutes);
 app.use(notFoundErrorHandler);
 app.use(errorHandler);
 
-export default initializeServer;
+export { initializeServer, app };
