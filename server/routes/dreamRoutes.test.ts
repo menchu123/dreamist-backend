@@ -29,6 +29,17 @@ beforeAll(async () => {
   token = loginResponse.body.token;
 });
 
+beforeEach(async () => {
+  await Dream.deleteMany();
+  await Dream.create({
+    _id: "618abb613c10e9728eef559a",
+    __v: 0,
+    title: "Sueño ilustrado",
+    description: "AAAAAAAAAAAAAHHHHHHHH",
+    mood: 1,
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.on("close", () => {
     debug(chalk.red("Connexion to database ended"));
@@ -38,7 +49,6 @@ afterAll(async () => {
     debug(chalk.red("Connexion to server ended"));
   });
   await server.close();
-  Dream.deleteMany();
 });
 
 describe("Given a /user-dreams endpoint", () => {
@@ -73,6 +83,39 @@ describe("Given a /user-dreams/new endpoint", () => {
         .expect(200);
 
       expect(body).toHaveProperty("title", "Sueño ilustrado");
+    });
+  });
+});
+
+describe("Given a /user-dreams/delete/:idDream endpoint", () => {
+  describe("When a DELETE request arrives with a correct token and an existing id", () => {
+    test("Then it should delete the dream and send a response with the deleted dream and a status code of 200", async () => {
+      const { body } = await request
+        .delete("/dreams/user-dreams/delete/618abb613c10e9728eef559a")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Sueño ilustrado",
+          description: "AAAAAAAAAAAAAHHHHHHHH",
+          mood: 1,
+        })
+        .expect(200);
+
+      expect(body).toHaveProperty("title", "Sueño ilustrado");
+    });
+  });
+  describe("When a DELETE request arrives with a correct token and an id that doesn't exist", () => {
+    test("Then it should delete the dream and send a response with a 404 error", async () => {
+      const { body } = await request
+        .delete("/dreams/user-dreams/delete/618abb613c10e9728eef449a")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          title: "Sueño ilustrado",
+          description: "AAAAAAAAAAAAAHHHHHHHH",
+          mood: 1,
+        })
+        .expect(404);
+
+      expect(body).toEqual({ error: "Dream not found :(" });
     });
   });
 });
