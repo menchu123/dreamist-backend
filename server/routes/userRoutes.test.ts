@@ -29,6 +29,7 @@ beforeEach(async () => {
     name: "Soñador",
     username: "soñandosoñandotriunfepatinando",
     password: await bcrypt.hash("sueñis", 10),
+    dreams: ["61a0a6cf496483906257e619", "61a0a6cf496483906257e61a"],
   });
 });
 
