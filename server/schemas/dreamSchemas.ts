@@ -20,5 +20,6 @@ export const editSchema = {
     mood: Joi.number(),
     image: Joi.string(),
     drawing: Joi.string(),
+    date: Joi.date().raw(),
   }),
 };
