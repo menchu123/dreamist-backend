@@ -8,6 +8,7 @@ export const createSchema = {
     mood: Joi.number(),
     image: Joi.string(),
     drawing: Joi.string(),
+    date: Joi.date().raw(),
   }),
 };
 
