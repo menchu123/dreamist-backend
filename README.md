@@ -1,1 +1,29 @@
-# Menchu_Back-Final-Project-202109
+# 🌙 Dreamist
+
+Dreamist is a digital dream journal that allows users to log their dreams. You can categorize your dream, add an image to help remember and even talk to the app and have it transcribe your dream for you. Fully tested with Jest.
+
+## Technologies
+
+✨ Frontend: Vue | Vuex | PWA | SASS | Typescript | Jest
+
+✨ Backend: NodeJS | ExpressJS | MongoDB | Mongoose | JWT | Jest
+
+✨ Other: Figma | Postman
+
+## Preview
+
+[Link to deployment](https://dreamist.netlify.app/)
+
+<img src="https://i.ibb.co/4NpB7sd/demo.gif" alt="Dreamist" height="500" />
+
+## Project setup
+
+```
+npm install
+```
+
+## Compiles and hot-reloads for development
+
+```
+npm run serve
+```
